@@ -1,5 +1,7 @@
 package com.example.githubuser.viewmodel
 
+import android.util.Log
+import androidx.fragment.app.FragmentManager.TAG
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +38,8 @@ class MainViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                _isLoading.value = false
+                Log.e("TESTING", "error: ${t.message}")
             }
         })
     }
