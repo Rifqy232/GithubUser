@@ -1,7 +1,6 @@
 package com.example.githubuser.api
 
 import com.example.githubuser.data.DetailUserResponse
-import com.example.githubuser.data.FollowResponse
 import com.example.githubuser.data.FollowResponseItem
 import com.example.githubuser.data.SearchResponse
 import retrofit2.Call

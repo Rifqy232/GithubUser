@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.githubuser.api.ApiConfig
-import com.example.githubuser.data.FollowResponse
 import com.example.githubuser.data.FollowResponseItem
-import com.example.githubuser.data.SearchItem
-import com.example.githubuser.data.SearchResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

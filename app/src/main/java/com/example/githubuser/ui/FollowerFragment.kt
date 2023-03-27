@@ -1,7 +1,6 @@
 package com.example.githubuser.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuser.R
 import com.example.githubuser.adapter.FollowAdapter
 import com.example.githubuser.data.FollowResponseItem
 import com.example.githubuser.databinding.FragmentFollowerBinding
-import com.example.githubuser.databinding.FragmentFollowingBinding
 import com.example.githubuser.viewmodel.DetailViewModel
 import com.example.githubuser.viewmodel.DetailViewModelFactory
 
@@ -22,7 +19,6 @@ class FollowerFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
 
     companion object {
-        const val TAG = "FollowingFragment"
         const val ARG_SECTION_NUMBER = "section_number"
         const val ARG_SECTION_USERNAME = "section_username"
     }

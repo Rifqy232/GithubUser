@@ -1,7 +1,6 @@
 package com.example.githubuser.viewmodel
 
 import android.util.Log
-import androidx.fragment.app.FragmentManager.TAG
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
