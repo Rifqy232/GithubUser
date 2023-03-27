@@ -2,6 +2,7 @@ package com.example.githubuser.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.viewpager2.widget.ViewPager2
@@ -23,6 +24,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_USERNAME = "extra_username"
+        private const val TAG = "DetailActivity"
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.tab_text_1,
@@ -70,6 +72,7 @@ class DetailActivity : AppCompatActivity() {
                         Glide.with(this@DetailActivity)
                             .load(responseBody.avatarUrl)
                             .into(binding.ivUserAvatar)
+                        binding.tvName.text = responseBody.name
                         binding.tvFollowing.text = String.format(getString(R.string.following), responseBody.following)
                         binding.tvFollower.text = String.format(getString(R.string.follower), responseBody.followers)
                     }
@@ -77,7 +80,8 @@ class DetailActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<DetailUserResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                showLoading(false)
+                Log.e(TAG, "error: ${t.message}")
             }
         })
     }
