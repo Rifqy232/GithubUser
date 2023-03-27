@@ -9,4 +9,7 @@
     <string name="detail_github_user">Detail Github User</string>
     <string name="following">%d Following</string>
     <string name="follower">%d Follower</string>
+    <string name="tab_text_1">Followings</string>
+    <string name="tab_text_2">Followers</string>
+    <string name="content_tab_text">This is tab %d</string>
 </resources>

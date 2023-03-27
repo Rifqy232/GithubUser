@@ -3,11 +3,16 @@ package com.example.githubuser.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuser.R
+import com.example.githubuser.adapter.SectionsPagerAdapter
 import com.example.githubuser.api.ApiConfig
 import com.example.githubuser.data.DetailUserResponse
 import com.example.githubuser.databinding.ActivityDetailBinding
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +23,11 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_USERNAME = "extra_username"
+        @StringRes
+        private val TAB_TITLES = intArrayOf(
+            R.string.tab_text_1,
+            R.string.tab_text_2
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +41,16 @@ class DetailActivity : AppCompatActivity() {
         name = intent.getStringExtra(EXTRA_USERNAME)
 
         getDetailUser()
+
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, name)
+        val viewPager: ViewPager2 = binding.viewPager
+        viewPager.adapter = sectionsPagerAdapter
+        val tabs: TabLayout = binding.tabs
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
+
+        supportActionBar?.elevation = 0f
     }
 
     private fun getDetailUser() {
