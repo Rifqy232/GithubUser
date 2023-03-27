@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
 import com.example.githubuser.adapter.FollowAdapter
@@ -50,11 +51,6 @@ class FollowingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(TAG, "ViewModel: $detailViewModel")
-
-        val index = arguments?.getInt(ARG_SECTION_NUMBER, 0)
-        Log.d(TAG, "Index: $index")
-
         detailViewModel.followings.observe(viewLifecycleOwner) {followingsItem ->
             setUserData(followingsItem)
         }
@@ -64,7 +60,9 @@ class FollowingFragment : Fragment() {
         }
 
         val layoutManager = LinearLayoutManager(requireActivity())
+        val dividerItemDecoration = DividerItemDecoration(requireActivity(), layoutManager.orientation)
         binding.rvFollow.layoutManager = layoutManager
+        binding.rvFollow.addItemDecoration(dividerItemDecoration)
     }
 
     private fun setUserData(followItem: List<FollowResponseItem>) {

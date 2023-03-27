@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
 import com.example.githubuser.adapter.UserAdapter
@@ -70,7 +71,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val layoutManager = LinearLayoutManager(view.context)
+        val dividerItemDecoration = DividerItemDecoration(view.context, layoutManager.orientation)
         binding.rvHome.layoutManager = layoutManager
+        binding.rvHome.addItemDecoration(dividerItemDecoration)
     }
 
     private fun showLoading(isLoading: Boolean) {

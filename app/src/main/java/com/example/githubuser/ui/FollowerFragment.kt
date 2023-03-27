@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
 import com.example.githubuser.adapter.FollowAdapter
@@ -55,7 +56,9 @@ class FollowerFragment : Fragment() {
         }
 
         val layoutManager = LinearLayoutManager(requireActivity())
+        val dividerItemDecoration = DividerItemDecoration(requireActivity(), layoutManager.orientation)
         binding.rvFollow.layoutManager = layoutManager
+        binding.rvFollow.addItemDecoration(dividerItemDecoration)
     }
 
     private fun setUserData(followItem: List<FollowResponseItem>) {
