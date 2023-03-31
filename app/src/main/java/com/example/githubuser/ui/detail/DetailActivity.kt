@@ -1,4 +1,4 @@
-package com.example.githubuser.ui
+package com.example.githubuser.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,9 +8,9 @@ import androidx.annotation.StringRes
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuser.R
-import com.example.githubuser.adapter.SectionsPagerAdapter
-import com.example.githubuser.api.ApiConfig
-import com.example.githubuser.data.DetailUserResponse
+import com.example.githubuser.ui.adapter.SectionsPagerAdapter
+import com.example.githubuser.data.remote.retrofit.ApiConfig
+import com.example.githubuser.data.remote.response.DetailUserResponse
 import com.example.githubuser.databinding.ActivityDetailBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
