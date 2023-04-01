@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
 import com.example.githubuser.data.Result
-import com.example.githubuser.ui.adapter.UserAdapter
 import com.example.githubuser.data.remote.response.SearchItem
 import com.example.githubuser.databinding.ActivityHomeBinding
 import com.example.githubuser.ui.detail.DetailActivity

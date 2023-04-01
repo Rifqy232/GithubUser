@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.example.githubuser.R
 import com.example.githubuser.data.local.entity.UserEntity
 import com.example.githubuser.databinding.ActivityDetailBinding
-import com.example.githubuser.ui.adapter.SectionsPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuser.ui.adapter.FollowAdapter
 import com.example.githubuser.data.remote.response.FollowResponseItem
 import com.example.githubuser.databinding.FragmentFollowingBinding
 
