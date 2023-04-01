@@ -40,4 +40,9 @@ class FavoriteActivity : AppCompatActivity() {
         val userAdapter = FavoriteAdapter(userList)
         binding?.rvFavorite?.adapter = userAdapter
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
