@@ -1,9 +1,9 @@
 package com.example.githubuser.ui.home
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -12,12 +12,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
+import com.example.githubuser.data.Result
 import com.example.githubuser.ui.adapter.UserAdapter
 import com.example.githubuser.data.remote.response.SearchItem
 import com.example.githubuser.databinding.ActivityHomeBinding
 import com.example.githubuser.ui.detail.DetailActivity
+import com.example.githubuser.ui.favorite.FavoriteActivity
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding
 
@@ -34,15 +36,15 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel.searchResult.observe(this) { result ->
             if (result != null) {
                 when (result) {
-                    is com.example.githubuser.data.Result.Loading -> {
+                    is Result.Loading -> {
                         binding?.progressBar?.visibility = View.VISIBLE
                     }
-                    is com.example.githubuser.data.Result.Success -> {
+                    is Result.Success -> {
                         binding?.progressBar?.visibility = View.GONE
                         val userData = result.data
                         setUserData(userData)
                     }
-                    is com.example.githubuser.data.Result.Error -> {
+                    is Result.Error -> {
                         binding?.progressBar?.visibility = View.GONE
                         Toast.makeText(
                             this,
@@ -54,10 +56,12 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        val layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration = DividerItemDecoration(this, layoutManager.orientation)
-        binding?.rvHome?.layoutManager = layoutManager
-        binding?.rvHome?.addItemDecoration(dividerItemDecoration)
+        val layoutMan = LinearLayoutManager(this)
+        val dividerItemDecoration = DividerItemDecoration(this, layoutMan.orientation)
+        binding?.rvHome?.apply {
+            layoutManager = layoutMan
+            addItemDecoration(dividerItemDecoration)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,20 +72,25 @@ class HomeActivity : AppCompatActivity() {
             factory
         }
 
-        val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+        val searchView = menu?.findItem(R.id.option_search)?.actionView as SearchView
+        val favoriteMenu = menu.findItem(R.id.option_favorite)
 
-        searchView.queryHint = resources.getString(R.string.search_hint)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                homeViewModel.getSearchedUser(query.toString())
-                searchView.clearFocus()
-                return true
-            }
+        searchView.apply {
+            queryHint = resources.getString(R.string.search_hint)
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    homeViewModel.getSearchedUser(query.toString())
+                    searchView.clearFocus()
+                    return true
+                }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+            })
+        }
+
+        favoriteMenu.setOnMenuItemClickListener(this)
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -105,5 +114,16 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_USERNAME = "extra_username"
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.option_favorite -> {
+                val favoriteIntent = Intent(this@HomeActivity, FavoriteActivity::class.java)
+                startActivity(favoriteIntent)
+            }
+        }
+
+        return true
     }
 }

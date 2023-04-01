@@ -1,6 +1,7 @@
 package com.example.githubuser.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.githubuser.data.local.entity.UserEntity
 import com.example.githubuser.data.local.room.UserDao
@@ -23,6 +24,7 @@ class UserRepository private constructor(
     private val followingResult = MutableLiveData<Result<List<FollowResponseItem>>>()
     private val followerResult = MutableLiveData<Result<List<FollowResponseItem>>>()
     private val detailUserResult = MutableLiveData<Result<DetailUserResponse>>()
+    private val userResult = MediatorLiveData<Result<UserEntity>>()
 
     fun getFollower(username: String): LiveData<Result<List<FollowResponseItem>>> {
         followerResult.value = Result.Loading
@@ -110,6 +112,39 @@ class UserRepository private constructor(
 
         })
         return searchResult
+    }
+
+    fun insertUser(username: String): LiveData<Result<UserEntity>> {
+        val client = apiService.getUserByName(username)
+        client.enqueue(object : Callback<DetailUserResponse> {
+            override fun onResponse(
+                call: Call<DetailUserResponse>,
+                response: Response<DetailUserResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val userResponse = response.body()
+                    appExecutors.diskIO.execute {
+                        val isFavorite = userDao.isUserFavorite(userResponse!!.login)
+                        val user = UserEntity(
+                            username = userResponse.login,
+                            avatarUrl = userResponse.avatarUrl,
+                            isFavorite = isFavorite,
+                        )
+                        userDao.deleteAll()
+                        userDao.insertUsers(user)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DetailUserResponse>, t: Throwable) {
+                userResult.value = Result.Error(t.message.toString())
+            }
+        })
+        return userResult
+    }
+
+    fun getFavoriteUserByUsername(username: String): LiveData<UserEntity> {
+        return userDao.getFavoriteUserByUsername(username)
     }
 
     fun getFavoriteUsers(): LiveData<List<UserEntity>> {

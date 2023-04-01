@@ -34,7 +34,7 @@ class UserAdapter(private val listUser: List<SearchItem>): RecyclerView.Adapter<
         holder.bindUser(listUser[position])
 
         holder.itemView.setOnClickListener {
-            onItemClickCallback.onItemClicked(listUser[holder.adapterPosition])
+            onItemClickCallback.onItemClicked(listUser[position])
         }
     }
 

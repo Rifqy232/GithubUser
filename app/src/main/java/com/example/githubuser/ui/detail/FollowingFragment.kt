@@ -35,12 +35,12 @@ class FollowingFragment : Fragment() {
 
         val username = arguments?.getString(ARG_SECTION_USERNAME).toString()
         val factory: ViewModelFactory =
-            ViewModelFactory.getInstance(requireActivity(), username)
+            ViewModelFactory.getInstance(requireActivity())
         val detailViewModel: FollowViewModel by viewModels {
             factory
         }
 
-        detailViewModel.followings.observe(viewLifecycleOwner) { result ->
+        detailViewModel.getFollowing(username).observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
                     is com.example.githubuser.data.Result.Loading -> binding?.progressBar?.visibility =
