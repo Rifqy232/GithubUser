@@ -9,4 +9,6 @@
     <string name="follower">%d Follower</string>
     <string name="tab_text_1">Followings</string>
     <string name="tab_text_2">Followers</string>
+    <string name="favorite">Favorite</string>
+    <string name="tab">Tab layout</string>
 </resources>

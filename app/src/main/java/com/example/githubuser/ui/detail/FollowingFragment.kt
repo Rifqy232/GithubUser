@@ -18,7 +18,6 @@ class FollowingFragment : Fragment() {
     private val binding get() = _binding
 
     companion object {
-        const val ARG_SECTION_NUMBER = "section_number"
         const val ARG_SECTION_USERNAME = "section_username"
     }
 
@@ -35,9 +34,9 @@ class FollowingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val username = arguments?.getString(ARG_SECTION_USERNAME).toString()
-        val factory: DetailViewModelFactory =
-            DetailViewModelFactory.getInstance(requireActivity(), username)
-        val detailViewModel: DetailViewModel by viewModels {
+        val factory: ViewModelFactory =
+            ViewModelFactory.getInstance(requireActivity(), username)
+        val detailViewModel: FollowViewModel by viewModels {
             factory
         }
 

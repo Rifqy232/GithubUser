@@ -1,9 +1,12 @@
 package com.example.githubuser.ui.detail
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -19,12 +22,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DetailActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDetailBinding
-    private var name: String? = null
+    private var _binding: ActivityDetailBinding? = null
+    private val binding get() = _binding
 
     companion object {
         private const val EXTRA_USERNAME = "extra_username"
-        private const val TAG = "DetailActivity"
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.tab_text_1,
@@ -34,63 +36,71 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        supportActionBar?.title = "Github Detail User"
+        _binding = ActivityDetailBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
         val intent = intent
-        name = intent.getStringExtra(EXTRA_USERNAME)
+        val name = intent.getStringExtra(EXTRA_USERNAME).toString()
 
-        getDetailUser()
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this@DetailActivity, name)
+        val detailViewModel: DetailViewModel by viewModels {
+            factory
+        }
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, name)
-        val viewPager: ViewPager2 = binding.viewPager
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = binding.tabs
-        TabLayoutMediator(tabs, viewPager) { tab, position ->
-            tab.text = resources.getString(TAB_TITLES[position])
-        }.attach()
+        showSectionsPager()
 
-        supportActionBar?.elevation = 0f
-    }
-
-    private fun getDetailUser() {
-        showLoading(true)
-        val client = name?.let { ApiConfig.getApiService().getUserByName(it) }
-        client?.enqueue(object : Callback<DetailUserResponse> {
-            override fun onResponse(
-                call: Call<DetailUserResponse>,
-                response: Response<DetailUserResponse>
-            ) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-
-                    if (responseBody != null) {
-                        binding.tvUsername.text = responseBody.login
-                        Glide.with(this@DetailActivity)
-                            .load(responseBody.avatarUrl)
-                            .into(binding.ivUserAvatar)
-                        binding.tvName.text = responseBody.name
-                        binding.tvFollowing.text = String.format(getString(R.string.following), responseBody.following)
-                        binding.tvFollower.text = String.format(getString(R.string.follower), responseBody.followers)
+        detailViewModel.getDetailUser(name).observe(this@DetailActivity) {result ->
+            if (result != null) {
+                when (result) {
+                    is com.example.githubuser.data.Result.Loading -> binding?.progressBar?.visibility = View.VISIBLE
+                    is com.example.githubuser.data.Result.Success -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        val userData = result.data
+                        userData.let {user ->
+                            binding?.apply {
+                                Glide.with(this@DetailActivity)
+                                    .load(user.avatarUrl)
+                                    .into(ivUserAvatar)
+                                tvUsername.text = user.login
+                                tvName.text = user.name
+                                tvFollower.text = String.format(getString(R.string.follower), user.followers)
+                                tvFollowing.text = String.format(getString(R.string.follower), user.following)
+                            }
+                        }
+                    }
+                    is com.example.githubuser.data.Result.Error -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        Toast.makeText(
+                            this,
+                            "Terjadi kesalahan: " + result.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
+        }
 
-            override fun onFailure(call: Call<DetailUserResponse>, t: Throwable) {
-                showLoading(false)
-                Log.e(TAG, "error: ${t.message}")
-            }
-        })
+        supportActionBar?.apply {
+            title = "Github Detail User"
+            elevation = 0f
+        }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    private fun showSectionsPager() {
+        val intent = intent
+        val name = intent.getStringExtra(EXTRA_USERNAME).toString()
+
+        val sectionsPagerAdapter = SectionsPagerAdapter(this@DetailActivity, name)
+        val viewPager: ViewPager2? = binding?.viewPager
+        viewPager?.adapter = sectionsPagerAdapter
+        val tabs: TabLayout? = binding?.tabs
+        TabLayoutMediator(tabs!!, viewPager!!) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
     }
 }

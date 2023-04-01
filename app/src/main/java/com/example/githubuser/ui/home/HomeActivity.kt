@@ -1,5 +1,6 @@
 package com.example.githubuser.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -20,15 +21,15 @@ class HomeActivity : AppCompatActivity() {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding
 
-    private val factory: HomeViewModelFactory = HomeViewModelFactory.getInstance(this)
-    val homeViewModel: HomeViewModel by viewModels {
-        factory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
+        val factory: HomeViewModelFactory = HomeViewModelFactory.getInstance(this@HomeActivity)
+        val homeViewModel: HomeViewModel by viewModels {
+            factory
+        }
 
         homeViewModel.searchResult.observe(this) { result ->
             if (result != null) {
@@ -61,6 +62,11 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
+
+        val factory: HomeViewModelFactory = HomeViewModelFactory.getInstance(this@HomeActivity)
+        val homeViewModel: HomeViewModel by viewModels {
+            factory
+        }
 
         val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
 

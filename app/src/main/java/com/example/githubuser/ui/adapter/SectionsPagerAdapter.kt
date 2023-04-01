@@ -16,14 +16,12 @@ class SectionsPagerAdapter(activity: AppCompatActivity, private val login: Strin
             0 -> {
                 fragment = FollowingFragment()
                 fragment.arguments = Bundle().apply {
-                    putInt(FollowingFragment.ARG_SECTION_NUMBER, position)
                     putString(FollowingFragment.ARG_SECTION_USERNAME, login.toString())
                 }
             }
             1 -> {
                 fragment = FollowerFragment()
                 fragment.arguments = Bundle().apply {
-                    putInt(FollowerFragment.ARG_SECTION_NUMBER, position)
                     putString(FollowerFragment.ARG_SECTION_USERNAME, login.toString())
                 }
             }

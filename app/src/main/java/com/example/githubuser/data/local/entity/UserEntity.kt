@@ -6,10 +6,16 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
 class UserEntity (
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    var id: Int = 0,
+
     @ColumnInfo(name = "username")
-    @PrimaryKey(autoGenerate = false)
     var username: String = "",
 
     @ColumnInfo(name = "avatarUrl")
-    var avatarUrl: String? = null
+    var avatarUrl: String? = null,
+
+    @ColumnInfo(name = "isFavorite")
+    var isFavorite: Boolean,
 )
