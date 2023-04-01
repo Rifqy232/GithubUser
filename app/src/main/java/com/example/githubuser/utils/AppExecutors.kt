@@ -7,7 +7,6 @@ import java.util.concurrent.Executors
 
 class AppExecutors {
     val diskIO: Executor = Executors.newSingleThreadExecutor()
-    val networkIO: Executor = Executors.newFixedThreadPool(3)
     val mainThread: Executor = MainThreadExecutor()
 
     private class MainThreadExecutor : Executor {

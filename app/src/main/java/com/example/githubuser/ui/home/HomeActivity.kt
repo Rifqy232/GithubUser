@@ -1,14 +1,21 @@
 package com.example.githubuser.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.R
@@ -17,10 +24,16 @@ import com.example.githubuser.data.remote.response.SearchItem
 import com.example.githubuser.databinding.ActivityHomeBinding
 import com.example.githubuser.ui.detail.DetailActivity
 import com.example.githubuser.ui.favorite.FavoriteActivity
+import com.example.githubuser.ui.settings.SettingPreferences
+import com.example.githubuser.ui.settings.SettingsActivity
+import com.example.githubuser.ui.settings.SettingsViewModel
+import com.example.githubuser.ui.settings.SettingsViewModelFactory
 
 class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding
+
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +43,18 @@ class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
         val factory: HomeViewModelFactory = HomeViewModelFactory.getInstance(this@HomeActivity)
         val homeViewModel: HomeViewModel by viewModels {
             factory
+        }
+
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingsViewModel =
+            ViewModelProvider(this, SettingsViewModelFactory(pref))[SettingsViewModel::class.java]
+
+        settingsViewModel.getThemeSettings().observe(this) { isDarkModeActive ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
 
         homeViewModel.searchResult.observe(this) { result ->
@@ -73,6 +98,7 @@ class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
 
         val searchView = menu?.findItem(R.id.option_search)?.actionView as SearchView
         val favoriteMenu = menu.findItem(R.id.option_favorite)
+        val settingsMenu = menu.findItem(R.id.option_setting)
 
         searchView.apply {
             queryHint = resources.getString(R.string.search_hint)
@@ -90,6 +116,7 @@ class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
         }
 
         favoriteMenu.setOnMenuItemClickListener(this)
+        settingsMenu.setOnMenuItemClickListener(this)
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -118,8 +145,14 @@ class HomeActivity : AppCompatActivity(), MenuItem.OnMenuItemClickListener {
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.option_favorite -> {
+                Log.d("TESS", "Fav")
                 val favoriteIntent = Intent(this@HomeActivity, FavoriteActivity::class.java)
                 startActivity(favoriteIntent)
+            }
+            R.id.option_setting -> {
+                Log.d("TESS", "Settings")
+                val settingsIntent = Intent(this@HomeActivity, SettingsActivity::class.java)
+                startActivity(settingsIntent)
             }
         }
 
