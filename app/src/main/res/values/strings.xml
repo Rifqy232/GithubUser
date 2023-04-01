@@ -12,4 +12,5 @@
     <string name="tab">Tab layout</string>
     <string name="setting">Setting</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="github_logo">github logo</string>
 </resources>
