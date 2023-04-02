@@ -86,6 +86,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         detailViewModel.getFavoriteUserByUsername(name).observe(this) { result ->
+            detailViewModel.insertUser(name)
             if (result != null) {
                 isFavorite = result.isFavorite
                 if (isFavorite) {
@@ -107,7 +108,6 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding?.fabFavorite?.setOnClickListener {
-            detailViewModel.insertUser(name)
             detailViewModel.getDetailUser(name).observe(this) { result ->
                 if (result != null) {
                     when (result) {
